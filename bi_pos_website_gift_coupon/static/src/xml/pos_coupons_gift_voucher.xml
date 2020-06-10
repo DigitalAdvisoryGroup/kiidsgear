@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<templates id="pos_coupons_gift_voucher_template" inherit_id="point_of_sale.template" xml:space="preserve">
+	
+
+  
+  <!-- GiftButtonWidget -->
+   
+	<t t-name="GiftButtonWidget" name="POS Coupens Gift Voucher">
+		<div class="control-button">
+			<i class="fa fa-gift"></i>Coupon
+		</div>
+	</t>
+
+	<t t-name="CouponConfigPopupWidget">
+		<div class="modal-dialog">
+			<div class="popup popup-textinput" style="">
+				<p class="title" style="background-color: rgb(110,200,155); color: #fff;">Coupon Options</p>
+				<div class="body" style="color: #0075AC;">
+					<div class="creat_coupon left">
+						<div class="left_wrapper" style="max-width: 43%;float:left;margin: 0px 10px;">
+							<div class="left_img" style="opacity: 0.5;">
+								<img src="/bi_pos_website_gift_coupon/static/src/img/create_coupon.png" style="max-width: 100%;"/>
+							</div>
+							<span class="text-center">Create Coupon</span>
+						</div>
+					</div>
+					<div class="select_coupon right" >
+						<div class="right_wrapper" style="max-width: 43%;float:left;margin: 0px 10px;">
+							<div class="right_img" style="opacity: 0.5;">
+								<img src="/bi_pos_website_gift_coupon/static/src/img/apply_coupon.png" style="max-width: 100%;"/>
+							</div>
+							<span class="text-center">Select Coupon</span>
+						</div>
+					</div>
+				</div>
+				<div class="footer" style="background-color: rgb(110,200,155); color: #fff;">
+						<div class="button cancel text-center" style="background-color: #0075AC; color: #fff;">
+								Cancel 
+						</div>
+				</div>
+			</div>
+		</div>
+	</t>
+
+	<t t-name="CreateCouponPopupWidget">
+		<div class="modal-dialog">
+			<div class="popup popup-textinput" style="text-align:left;max-height:750px !important;height: 100% !important;">
+				<p class="title" style="background-color: rgb(110,200,155); color: #fff;">Create Coupon</p>
+				<div id="error_text" style="color: #ec1010; font-size: inherit; margin: 5px; text-align: center;"></div>
+				<div class="body" style="margin: 40px 20px;">
+					<div class="create_wrapper">
+						<table id="create_coupon_table" class="table">
+							<tr>
+								<td>
+									<span>Name </span><sup style="color:red;">*</sup>
+									<span>
+										<input id="coupon_name" type="text" class="input-field" name="c_name" style="margin:8px auto"/>
+									</span>
+								</td>
+								<td>
+									<span>Coupon usage limit</span>
+									<span>
+										<input id="coupon_limit" type="number" min="0" class="input-field" name="c_limit" style="margin:8px auto"/>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span>Product </span><sup style="color:red;">*</sup>
+									<span>
+										<select id="coupon_product" style="margin:8px auto;min-width: 176px;    min-height: 40px;">
+											<t t-foreach="widget.pos.db.product_by_id" t-as="prod">
+												<t t-if=" widget.pos.db.product_by_id[prod]['is_coupon_product']">
+													<option t-att-value="widget.pos.db.product_by_id[prod]['id']"><t t-esc="widget.pos.db.product_by_id[prod]['display_name']"/></option>
+												</t>
+											</t>
+										</select>
+									</span>
+								</td>
+								<td>
+									<span>Amount Type </span><sup style="color:red;">*</sup>
+									<select id="coup_amount_type" style="margin:8px auto;min-width: 176px;    min-height: 40px;">
+										<option value="Percentage">Percentage</option>
+										<option value="Fixed">Fixed</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span>Coupon Amount </span><sup style="color:red;">*</sup>
+									<span>
+										<input id="coupon_amount" type="text" class="input-field" name="c_amount" style="margin:8px auto"/>
+									</span>
+								</td>
+								<td>
+									<span>Max Amount </span>
+									<span>
+										<input id="coupon_max_amount" type="text" class="input-field" name="c_max_amount" style="margin:8px auto"/>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<span>Issue Date </span><sup style="color:red;">*</sup>
+									<span>
+										<input id="coupon_issue_dt" type="date" class="input-field" name="c_issue_dt" style="margin:8px auto;
+											font-size:15px;"/>
+									</span>
+								</td>
+								<td>
+									<span>Expiry Date </span>
+									<span style="display: inline-block;vertical-align: sub;">
+										<input id="coupon_expdt_box" type="checkbox" name="c_expdt_box" style="min-height: auto;margin:8px;font-size:15px;"/>
+									</span>
+									<span>
+										<input id="coupon_exp_dt" type="date" class="input-field" name="c_exp_dt" style="margin:8px auto"/>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td style="    padding: 10px 0px;">
+									<span>Specific Customer </span>
+									<span style="display: inline-block;vertical-align: sub;">
+										<input id="coupon_cust_box" type="checkbox" name="c_cust_box" style="min-height: auto;margin:8px;"/>
+									</span>
+								</td>
+								<td>
+									<select id="coupon_customer" style="margin:8px auto;min-width: 176px;    min-height: 40px;">
+										<t t-foreach="widget.pos.partners" t-as="d">
+											<option><t t-esc='d.name'/></option>
+										</t>
+									</select>
+								</td>
+								
+							</tr>
+							
+						</table>
+					</div>
+				</div>
+				<div class="footer" style="background-color: rgb(110,200,155); color: #fff;">
+						<div class="button cancel" style="background-color: #0075AC; color: #fff;">
+								Cancel 
+						</div>
+						<div class="button confirm" id="create_coupon" style="background-color: #0075AC; color: #fff;">
+								Create 
+						</div>
+				</div>
+			</div>
+		</div>
+	</t>
+
+	<!-- After Created the Coupon -->
+	<t t-name="AfterCreateCouponPopup">
+		<div class="modal-dialog">
+			<div class="popup popup-textinput" style="max-height:250px;">
+				<p class="title" style="background-color: rgb(110,200,155); color: #fff;">Confirmation</p>
+				<div class="body" style="color: #0075AC;">
+					<div class="coupon_created left">
+						<div class="msg_wrapper" style="margin: 30px auto;">
+							<p>Gift coupon is created successfully.</p>
+						</div>
+					</div>
+				</div>
+				<div class="footer" style="background-color: rgb(110,200,155); color: #fff;">
+						<div class="button close text-center" style="background-color: #0075AC; color: #fff;">
+								Cancel 
+						</div>
+						<div class="button confirm print_coupon" id="print_coupon" style="background-color: #0075AC; color: #fff;">
+								<span class="fa fa-print"/> Print 
+						</div>
+				</div>
+			</div>
+		</div>
+	</t>
+
+	<!-- After Created Coupon Print Buttton -->
+	<t t-name="PrintCouponButtonScreen">
+	  <div class='receipt-screen screen'>
+		  <div class='screen-content'>
+			  <div class='top-content'>
+				  <span class='button next' style="background-color:#6EC89B; color:white">
+					  Back
+					  <i class='fa fa-angle-double-right' style="margin-left:5px;"></i>
+				  </span>
+			  </div>
+			  <div class="centered-content touch-scrollable">
+				  <div class="button print-coupon">
+					  <i class='fa fa-print'></i> Print Coupon
+				  </div>
+				  <div class="pos-receipt-container print-coupon-receipt" style="text-align: center;">
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+	</t>
+
+	<t t-name="CouponPrint">
+		<div class="pos-receipt">
+			<div class="pos-center-align" style="text-align: center;">
+				<p>Gift coupon</p>
+				<div class="pos-center-align" style="text-align: center;">
+				
+						<t t-esc="date_o"/> <br/>
+						<t t-esc="widget.pos.company.name"/><br />
+						<div class="receipt-phone">
+								Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
+						</div>
+						<div class="receipt-user">
+								User: <t t-esc="widget.pos.get_cashier().name"/><br />
+						</div>
+						<div class="receipt-user">
+								Email: <t t-esc="widget.pos.company.email || ''"/><br />
+						</div>
+						<br />
+				</div>
+
+				<img class="img img-responsive" src="/bi_pos_website_gift_coupon/static/src/img/gift-card2.png" style="max-width:100%;"/>
+
+				<div class="coup_details" style="margin:16px auto">
+
+					<p><strong>Name : </strong><span t-esc="summery.coup_name"/></p>
+					
+					<p><strong>Issue date : </strong><span t-esc="summery.coup_issue_dt"/></p>
+					<t t-if="summery.coup_exp_dt">
+						<p><strong>Expiry date : </strong><span t-esc="summery.coup_exp_dt"/></p>
+					</t>
+					<p>
+						<strong>Amount : </strong>
+						<span t-esc="summery.coup_amount"/>
+						<t t-if="summery.am_type == 'per'">
+							<span style="margin-left:5px;">%</span>
+						</t>
+						<t t-if="summery.am_type == 'fix'">
+							<span style="margin-left:5px;">Fixed</span>
+						</t>
+					</p>
+					<span id="coup_barcode"/>
+					<p><strong>Coupon Number : </strong><span t-esc="summery.coup_code"/></p>
+				</div>
+			</div>
+		</div>
+	</t>
+
+	<!-- SelectExistingPopupWidget -->     
+	<t t-name="SelectExistingPopupWidget">
+		<div class="modal-dialog">
+			<div class="popup popup-textinput" style="height: 270px !important;">
+				<p class="title" style="background-color: rgb(110,200,155); color: #fff;">Apply Coupon/Gift Voucher Code</p>
+				<p class="body" style="color: #0075AC;height">Enter Your Coupon Code Here</p>
+				 <input id ="existing_coupon_code" style="margin:0px auto;" type="text" class="input-field" name="code"></input>
+				<div class="footer" style="background-color: rgb(110,200,155); color: #fff;">
+					<div class="button cancel" style="background-color: #0075AC; color: #fff;">
+						Cancel 
+					</div>
+					<div class="button confirm" id="apply_coupon_code" style="background-color: #0075AC; color: #fff;">
+						Apply 
+					</div>
+				</div>
+			</div>
+		</div>
+	</t>
+ 
+	
+	</templates>
+	
+	
